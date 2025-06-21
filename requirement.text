@@ -1,0 +1,306 @@
+Product Requirements Document (PRD): XAU/USD Scalping Bot
+
+1. Objective
+To develop a scalping bot that trades XAU/USD (Gold vs USD) using MetaTrader 5 (MT5) and Python.
+ The bot should focus on small, frequent profits by exploiting short-term price movements while minimizing daily risk.
+
+2. Goal
+Achieve average 1–2% profit per day, only when the market provides favorable opportunities.
+
+
+Limit daily maximum loss (drawdown) to 3% of the total capital.
+
+
+Avoid trading in unclear or low-volatility conditions.
+
+
+Ensure all strategies are thoroughly backtested before live deployment.
+
+
+
+3. Strategy
+Timeframe: 1-minute chart (M1)
+Core Indicators:
+EMA(5) & EMA(21): Short-term trend detection
+
+
+RSI(14): Identify overbought/oversold and potential reversals
+
+
+ATR(14): Adjust Take Profit (TP) and Stop Loss (SL) dynamically based on market volatility
+
+
+Risk Management:
+Risk per trade: 0.5% – 1%
+
+
+Risk-Reward Ratio (RRR): At least 1.5:1
+
+
+Max trades per day: 5
+
+
+Max daily loss: 3%
+
+
+Trade Conditions:
+Only trade during high-volume sessions (e.g. London and New York open)
+
+
+Avoid sideways markets using volatility and momentum filters
+
+
+
+4. Technical Stack
+Programming Language: Python 3.x
+
+
+Platform: MetaTrader 5 (MT5)
+
+
+Libraries: MetaTrader5, pandas, numpy, plotly
+
+
+Data Sources:
+
+
+Real-time data from MT5
+
+
+Historical data for backtesting and optimization
+
+
+
+5. Deliverables
+Fully functional scalping bot connected to MT5
+
+
+Trade logging system (CSV or database)
+
+
+Backtesting engine including trading fees and commissions, with detailed performance reports and visualizations
+
+
+Optional daily or monthly performance reports
+
+
+Configuration file for adjusting strategy parameters easily
+
+
+
+6. Backtesting System Requirements
+Ability to replay historical XAU/USD minute-level data for simulating trades
+
+
+Incorporate trading fees, commissions, and slippage into backtest calculations
+
+
+Provide summary metrics: total profit/loss, drawdown, win rate, profit factor, Sharpe ratio
+
+
+Generate detailed trade logs and charts (equity curve, drawdown graph)
+
+
+Allow parameter optimization and scenario testing
+
+
+Separate module (backtest.py) with clean API for integration and easy future updates
+
+
+
+7. File Structure & Code Organization
+bash
+CopyEdit
+/xauusd_scalping_bot/
+│
+├── main.py               # Entry point to run live trading bot
+├── backtest.py           # Backtesting engine and performance reports
+├── config.py             # Configuration and parameter settings
+├── indicators.py         # Calculation of EMA, RSI, ATR indicators
+├── strategy.py           # Strategy logic and trade signal generation
+├── risk_management.py    # Position sizing and risk control
+├── trade_executor.py     # Interface with MT5 to place and manage trades
+├── logger.py             # Logging trades and errors
+├── utils.py              # Helper functions (e.g. data processing)
+└── reports/              # Folder to save backtest reports and logs
+
+Each module should be small, focused on one responsibility.
+
+
+Use clear and consistent naming conventions.
+
+
+Write unit tests (optional but recommended) to verify logic correctness.
+
+
+Document functions and modules with comments for clarity.
+
+
+
+8. Notes
+The bot should only trade when conditions are favorable; no forced trades
+
+
+Backtesting must be accurate and reflect real trading conditions, including fees
+
+
+Future improvements may include news event filtering and advanced position sizing
+
+
+
+9. Example Code Snippets
+config.py
+python
+CopyEdit
+CONFIG = {
+    'risk_per_trade': 0.01,   # 1% risk per trade
+    'max_trades_per_day': 5,
+    'max_daily_loss': 0.03,
+    'take_profit_pips': 10,
+    'stop_loss_pips': 7,
+}
+
+
+indicators.py
+python
+CopyEdit
+import pandas as pd
+import numpy as np
+
+def calculate_ema(series, period):
+    return series.ewm(span=period, adjust=False).mean()
+
+def calculate_rsi(series, period=14):
+    delta = series.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+    rs = gain / loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi
+
+def calculate_atr(high, low, close, period=14):
+    high_low = high - low
+    high_close = np.abs(high - close.shift())
+    low_close = np.abs(low - close.shift())
+    tr = pd.concat([high_low, high_close, low_close], axis=1).max(axis=1)
+    atr = tr.rolling(window=period).mean()
+    return atr
+
+def calculate_indicators(rates):
+    df = pd.DataFrame(rates)
+    df['close'] = df['close']
+    df['high'] = df['high']
+    df['low'] = df['low']
+    
+    df['ema5'] = calculate_ema(df['close'], 5)
+    df['ema21'] = calculate_ema(df['close'], 21)
+    df['rsi'] = calculate_rsi(df['close'])
+    df['atr'] = calculate_atr(df['high'], df['low'], df['close'])
+    
+    return df.iloc[-1]  # Return latest indicators row
+
+
+strategy.py
+python
+CopyEdit
+def generate_signal(indicators):
+    # Simple logic: buy if ema5 > ema21 and RSI < 70
+    # sell if ema5 < ema21 and RSI > 30
+    if indicators['ema5'] > indicators['ema21'] and indicators['rsi'] < 70:
+        return "BUY"
+    elif indicators['ema5'] < indicators['ema21'] and indicators['rsi'] > 30:
+        return "SELL"
+    else:
+        return "NONE"
+
+
+risk_management.py
+python
+CopyEdit
+def calculate_position_size(risk_per_trade, account_balance):
+    # Simplified fixed % of account balance per trade
+    position_size = account_balance * risk_per_trade
+    return position_size
+
+
+trade_executor.py
+python
+CopyEdit
+import MetaTrader5 as mt5
+
+def place_order(symbol, signal, volume):
+    request = {
+        "action": mt5.TRADE_ACTION_DEAL,
+        "symbol": symbol,
+        "volume": volume,
+        "type": mt5.ORDER_TYPE_BUY if signal == "BUY" else mt5.ORDER_TYPE_SELL,
+        "price": mt5.symbol_info_tick(symbol).ask if signal == "BUY" else mt5.symbol_info_tick(symbol).bid,
+        "deviation": 10,
+        "magic": 234000,
+        "comment": "XAUUSD Scalping Bot order",
+        "type_time": mt5.ORDER_TIME_GTC,
+        "type_filling": mt5.ORDER_FILLING_RETURN,
+    }
+    result = mt5.order_send(request)
+    return result
+
+
+logger.py
+python
+CopyEdit
+import csv
+import datetime
+
+def log_trade(order_result):
+    with open("trade_log.csv", mode="a", newline="") as file:
+        writer = csv.writer(file)
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        writer.writerow([now, order_result.retcode, order_result.comment])
+    print(f"Logged trade at {now} with result code {order_result.retcode}")
+
+
+main.py
+python
+CopyEdit
+from config import CONFIG
+from strategy import generate_signal
+from trade_executor import place_order
+from indicators import calculate_indicators
+from risk_management import calculate_position_size
+from logger import log_trade
+import MetaTrader5 as mt5
+
+def run_live_bot():
+    if not mt5.initialize():
+        print("MT5 initialize failed")
+        return
+    
+    # 1. Get recent price data (symbol: XAUUSD, timeframe: M1)
+    rates = mt5.copy_rates_from_pos("XAUUSD", mt5.TIMEFRAME_M1, 0, 50)
+    
+    # 2. Calculate indicators
+    indicators = calculate_indicators(rates)
+    
+    # 3. Generate trading signal
+    signal = generate_signal(indicators)
+    print(f"Signal: {signal}")
+    
+    if signal == "NONE":
+        print("No clear signal. Skip trading.")
+        return
+    
+    # 4. Calculate position size based on risk management
+    position_size = calculate_position_size(CONFIG['risk_per_trade'], account_balance=10000)
+    
+    # 5. Place order
+    order_result = place_order("XAUUSD", signal, position_size)
+    
+    # 6. Log trade result
+    log_trade(order_result)
+    
+    mt5.shutdown()
+
+if __name__ == "__main__":
+    run_live_bot()
+
+

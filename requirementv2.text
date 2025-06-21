@@ -1,0 +1,72 @@
+XAU/USD Scalping Bot – Enhanced Strategy (v3)
+1. Multi-Timeframe Confirmation
+To reduce false signals, introduce a filter using the 5-minute (M5) chart to confirm trends before entering trades on the 1-minute (M1) chart.
+
+Buy Condition: EMA(5) > EMA(20) on both M1 and M5
+
+Sell Condition: EMA(5) < EMA(20) on both M1 and M5
+
+This ensures broader trend alignment and enhances signal quality.
+
+2. Adaptive Cooldown Between Trades
+Introduce a cooldown mechanism that adjusts based on the result of the previous trade:
+
+After a winning trade: wait 3 candles (minutes) before placing a new trade
+
+After a losing trade: wait 10 candles (minutes) before placing a new trade
+
+This helps prevent overtrading and mitigates emotional decisions.
+
+3. ATR-Based Dynamic SL/TP (Updated)
+Continue using the Average True Range (ATR) to dynamically set stop-loss and take-profit levels:
+
+Stop Loss = ATR × 1.2
+
+Take Profit = ATR × 1.8
+
+This ensures the risk-reward ratio remains favorable while adapting to market volatility.
+
+4. Signal Quality Scoring System
+Implement a scoring system to evaluate the quality of a trade signal before execution:
+
++10 points if RSI is far from 50 (above 60 or below 40)
+
++15 points if ATR is above its 20-period moving average
+
++20 points if multi-timeframe confirmation (M1 and M5) is positive
+
+✅ Only execute trades with a Signal Score ≥ 60
+
+5. Market Volatility & Momentum Filter
+To avoid unproductive trades in low-volatility markets:
+
+Skip trading when the current ATR is below its 20-period average
+
+Optionally integrate MACD Histogram to confirm directional momentum
+
+This helps the bot remain active only during dynamic, high-potential periods.
+
+6. Auto Pause Mode (Market Non-Responsive)
+Introduce a logic to temporarily halt the bot during flat or uncertain market conditions:
+
+If 3 consecutive signals are "NONE" → pause trading for 30 minutes
+
+If no trades occur during the entire session → deactivate bot for the day
+
+This prevents unnecessary trades and promotes discipline in unpredictable markets.
+
+7. File Structure Updates (Additional Modules)
+To support the added functionalities, update the project structure with dedicated modules:
+
+bash
+Copy
+Edit
+/xauusd_scalping_bot/
+│
+├── mtf_filter.py          # Multi-timeframe logic (M1 + M5)
+├── cooldown_manager.py    # Trade cooldown logic
+├── signal_evaluator.py    # Signal scoring system
+├── volatility_filter.py   # ATR and momentum filter logic
+├── pause_manager.py       # Auto-pause and resume logic
+Each module should be cleanly separated, follow naming conventions, and contain unit-testable functions.
+

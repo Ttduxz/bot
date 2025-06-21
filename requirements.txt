@@ -1,0 +1,11 @@
+# MetaTrader5==5.0.45  # Not available on macOS
+pandas==2.1.4
+numpy==1.24.3
+plotly==5.17.0
+matplotlib==3.8.2
+seaborn==0.13.0
+python-dotenv==1.0.0
+schedule==1.2.0
+requests==2.31.0
+sqlalchemy==2.0.23
+streamlit==1.28.1 
