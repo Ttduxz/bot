@@ -1,4 +1,4 @@
-# XAU/USD Scalping Bot v3
+# XAU/USD Scalping Bot v1.0
 
 A sophisticated automated trading bot for XAU/USD (Gold) scalping with advanced features including multi-timeframe confirmation, adaptive cooldown, signal quality scoring, and comprehensive risk management.
 
@@ -10,7 +10,7 @@ A sophisticated automated trading bot for XAU/USD (Gold) scalping with advanced 
 - **Dynamic SL/TP**: ATR-based stop loss and take profit levels
 - **Risk Management**: Daily loss limits, trade limits, and position sizing
 
-### Enhanced v3 Features
+### Enhanced Features
 - **Signal Quality Scoring**: Minimum score 60 required for trade execution
 - **Volatility Filter**: ATR vs ATR MA comparison for market conditions
 - **Momentum Filter**: MACD histogram analysis for trend strength
@@ -154,7 +154,7 @@ untitled/
 ├── logger.py             # Logging utilities
 ├── backtest.py           # Backtesting module
 ├── utils.py              # Utility functions
-├── modules/              # Enhanced v3 modules
+├── modules/              # Enhanced modules
 │   ├── mtf_filter.py     # Multi-timeframe filter
 │   ├── cooldown_manager.py # Adaptive cooldown
 │   ├── signal_evaluator.py # Signal quality scoring
@@ -210,9 +210,9 @@ The bot generates comprehensive logs and reports:
 ## 🔍 Monitoring
 
 ### Log Files
-- `trading_bot_v3.log`: Main application log
-- `trade_log_v3.csv`: Trade execution records
-- `signal_log_v3.csv`: Signal analysis records
+- `trading_bot_v1.log`: Main application log
+- `trade_log_v1.csv`: Trade execution records
+- `signal_log_v1.csv`: Signal analysis records
 
 ### Real-time Monitoring
 - Signal generation status
@@ -274,7 +274,7 @@ LOG_LEVEL=DEBUG
 ## 📞 Support
 
 For issues and questions:
-1. Check the logs in `trading_bot_v3.log`
+1. Check the logs in `trading_bot_v1.log`
 2. Review configuration settings
 3. Test with mock API first
 4. Contact broker for API issues
@@ -285,18 +285,14 @@ This project is for educational purposes. Use at your own risk.
 
 ## 🔄 Version History
 
-### v3.0 (Current)
+### v1.0 (Current) - Initial Release
 - Multi-timeframe confirmation
 - Signal quality scoring
 - Advanced filters
 - Auto-pause functionality
 - Enhanced risk management
+- **Status**: Pre-launch, in development
 
-### v2.0
-- Basic scalping strategy
-- Risk management
-- MT5 integration
-
-### v1.0
-- Initial release
-- Basic EMA crossover strategy 
+### Planned Future Versions
+- **v2.0**: Performance dashboard, advanced analytics
+- **v3.0**: Machine learning integration, portfolio management 
