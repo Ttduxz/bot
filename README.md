@@ -1,319 +1,302 @@
-# XAU/USD Scalping Bot V3
+# XAU/USD Scalping Bot v3
 
-> **For a full user manual and step-by-step instructions, see [MANUAL.md](./MANUAL.md). This README provides a technical and feature overview.**
+A sophisticated automated trading bot for XAU/USD (Gold) scalping with advanced features including multi-timeframe confirmation, adaptive cooldown, signal quality scoring, and comprehensive risk management.
 
-A professional scalping bot for trading Gold (XAU/USD) using MetaTrader 5 and Python. This bot implements a sophisticated scalping strategy with comprehensive risk management, multi-timeframe analysis, advanced filtering systems, and real-time monitoring dashboard.
+## 🚀 Features
 
-## 🚀 V3 Enhancements
+### Core Trading Features
+- **Multi-timeframe Analysis**: M1 + M5 confirmation with EMA(5) & EMA(20)
+- **Advanced Indicators**: EMA, RSI, ATR, MACD with optimized parameters
+- **Dynamic SL/TP**: ATR-based stop loss and take profit levels
+- **Risk Management**: Daily loss limits, trade limits, and position sizing
 
-### **Multi-Timeframe Confirmation**
-- **M1 + M5 Analysis**: Confirms trends on both 1-minute and 5-minute charts
-- **EMA(5) & EMA(20)**: Used on both timeframes for trend alignment
-- **Signal Quality**: Only trades when both timeframes agree
+### Enhanced v3 Features
+- **Signal Quality Scoring**: Minimum score 60 required for trade execution
+- **Volatility Filter**: ATR vs ATR MA comparison for market conditions
+- **Momentum Filter**: MACD histogram analysis for trend strength
+- **Adaptive Cooldown**: 3 min after win, 10 min after loss
+- **Auto Pause**: Automatic pause after 3 consecutive NONE signals
+- **Comprehensive Logging**: Detailed trade and signal logging
 
-### **Adaptive Cooldown System**
-- **After Winning Trade**: 3-minute cooldown
-- **After Losing Trade**: 10-minute cooldown
-- **Emotional Control**: Prevents overtrading and revenge trading
+## 📋 Requirements
 
-### **Enhanced ATR-Based Dynamic SL/TP**
-- **Stop Loss**: ATR × 1.2 (more conservative)
-- **Take Profit**: ATR × 1.8 (better risk-reward)
-- **Volatility Adaptation**: Automatically adjusts to market conditions
+- Python 3.8+
+- MetaTrader5 (Windows) or Mock API (macOS/Linux)
+- MT5 broker account with API access
 
-### **Signal Quality Scoring System**
-- **Minimum Score**: 60/100 required to execute trades
-- **Scoring Factors**:
-  - RSI distance from 50 (+10 points)
-  - ATR volatility (+15 points)
-  - Multi-timeframe confirmation (+20 points)
-  - Trend strength (+10 points)
-  - Price momentum (+5 points)
-  - Volume confirmation (+5 points)
-  - Trading session bonus (+5 points)
+## 🛠️ Installation
 
-### **Market Volatility & Momentum Filter**
-- **ATR Filter**: Only trades when ATR > 20-period average
-- **MACD Momentum**: Confirms directional momentum
-- **Low Volatility Protection**: Avoids sideways markets
-
-### **Auto Pause Mode**
-- **3 Consecutive NONE Signals**: Automatically pauses for 30 minutes
-- **Session Management**: Tracks trading sessions and performance
-- **Market Responsiveness**: Resumes when conditions improve
-
-### **Real-Time Monitoring Dashboard**
-- **Live Market Data**: Current price, indicators, and signals
-- **Performance Metrics**: P&L, win rate, account balance, drawdown
-- **Alerts & Warnings**: Daily loss limits, cooldown status, pause conditions
-- **Trade History**: Recent trades with timestamps and results
-- **Signal Analysis**: Quality breakdown and filter status
-- **Auto-Refresh**: Configurable refresh intervals (1-30 seconds)
-- **Mode Switching**: Live trading and backtest modes
-
-## Features
-
-- **Scalping Strategy**: 1-minute timeframe trading with enhanced indicators
-- **Risk Management**: Configurable position sizing, daily loss limits, and maximum trade limits
-- **Trading Sessions**: Automatic trading during London and New York sessions
-- **Dynamic TP/SL**: Take Profit and Stop Loss calculated based on ATR volatility
-- **Comprehensive Logging**: Detailed trade logs and signal tracking
-- **Backtesting Engine**: Historical performance analysis with detailed reports
-- **Real-time Monitoring**: Live trading with continuous market analysis
-- **Status Reporting**: Comprehensive bot status and performance metrics
-- **Web Dashboard**: Real-time monitoring interface with charts and alerts
-
-## Strategy Overview
-
-The bot implements an enhanced scalping strategy with the following characteristics:
-
-- **Timeframe**: 1-minute (M1) charts with 5-minute (M5) confirmation
-- **Indicators**: 
-  - EMA(5) & EMA(20) for trend detection (updated from EMA21)
-  - RSI(14) for overbought/oversold conditions
-  - ATR(14) for volatility-based position sizing
-  - MACD for momentum confirmation
-- **Risk Management**:
-  - 0.5% - 1% risk per trade
-  - Maximum 5 trades per day
-  - Maximum 3% daily loss
-  - Risk-Reward ratio: 1.5:1 minimum
-  - Adaptive cooldown periods
-- **Trading Conditions**:
-  - Only during London (08:00-16:00 UTC) and New York (13:00-21:00 UTC) sessions
-  - Multi-timeframe confirmation required
-  - Minimum signal quality score of 60
-  - Volatility and momentum filters active
-
-## Installation
-
-1. **Install Python Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Install MetaTrader 5**:
-   - Download and install MetaTrader 5 from your broker
-   - Ensure you have a demo or live account
-
-3. **Configure Environment Variables**:
-   Create a `.env` file in the project root:
-   ```env
-   MT5_LOGIN=your_login_number
-   MT5_PASSWORD=your_password
-   MT5_SERVER=your_broker_server
-   ```
-
-## Configuration
-
-Edit `config.py` to customize the bot parameters:
-
-```python
-CONFIG = {
-    'risk_per_trade': 0.01,        # 1% risk per trade
-    'max_trades_per_day': 5,       # Maximum trades per day
-    'max_daily_loss': 0.03,        # 3% maximum daily loss
-    'signal_minimum_score': 60,    # Minimum signal score to execute
-    'cooldown_win_minutes': 3,     # Cooldown after winning trade
-    'cooldown_loss_minutes': 10,   # Cooldown after losing trade
-    'atr_sl_multiplier': 1.2,      # ATR multiplier for stop loss
-    'atr_tp_multiplier': 1.8,      # ATR multiplier for take profit
-    # ... more parameters
-}
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd untitled
 ```
 
-## Usage
+### 2. Create Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Install TA-Lib (Required for Technical Indicators)
+```bash
+# macOS
+brew install ta-lib
+pip install TA-Lib
+
+# Windows
+# Download and install from: https://www.lfd.uci.edu/~gohlke/pythonlibs/#ta-lib
+# Then: pip install TA_Lib-0.4.24-cp39-cp39-win_amd64.whl
+
+# Linux
+sudo apt-get install ta-lib
+pip install TA-Lib
+```
+
+## ⚙️ Configuration
+
+### 1. Environment Setup
+Copy the example environment file:
+```bash
+cp env_example.txt .env
+```
+
+### 2. Configure MT5 Settings
+Edit `.env` with your MT5 credentials:
+```env
+# MT5 Connection Settings
+MT5_LOGIN=12345678
+MT5_PASSWORD=your_password
+MT5_SERVER=YourBroker-Demo
+
+# Risk Management
+MAX_DAILY_LOSS=100
+MAX_DAILY_TRADES=10
+RISK_PERCENT=2.0
+POSITION_SIZE=0.1
+
+# Logging
+LOG_LEVEL=INFO
+DEBUG=false
+```
+
+### 3. Platform-Specific Setup
+
+#### Windows (MT5 Desktop)
+- Install MetaTrader5 desktop application
+- Configure your broker account
+- The bot will use the native MT5 API
+
+#### macOS/Linux (Mock API)
+- The bot will automatically use the mock API
+- Perfect for testing and development
+- No MT5 installation required
+
+## 🚀 Usage
 
 ### Live Trading
-
-Run the bot for live trading:
-
 ```bash
 python main.py
 ```
 
-The bot will:
-1. Connect to MetaTrader 5
-2. Initialize all v3 components (MTF, cooldown, signal evaluator, etc.)
-3. Start monitoring the market every minute
-4. Execute trades based on enhanced strategy signals
-5. Log all activities and trades with detailed analysis
-
-### Real-Time Dashboard
-
-Launch the monitoring dashboard:
-
-```bash
-streamlit run dashboard.py
-```
-
-The dashboard provides:
-- **Live Market Data**: Current price, indicators, and signals
-- **Performance Metrics**: P&L, win rate, account balance, drawdown
-- **Alerts & Warnings**: Daily loss limits, cooldown status, pause conditions
-- **Trade History**: Recent trades with timestamps and results
-- **Signal Analysis**: Quality breakdown and filter status
-- **Interactive Charts**: Price charts with EMA indicators
-- **Auto-Refresh**: Configurable refresh intervals
-
-### Status Report
-
-Get a comprehensive status report:
-
-```bash
-python main.py status
-```
-
-This shows:
-- Risk management status
-- Cooldown information
-- Pause status
-- Multi-timeframe indicators
-- Market conditions
-
 ### Backtesting
-
-Run backtesting to analyze historical performance:
-
 ```bash
 python backtest.py
 ```
 
-### Testing
-
-Test all v3 components:
-
+### Test Imports
 ```bash
-python test_bot_v3.py
+python test_imports.py
 ```
 
-## File Structure
-
-```
-xauusd_scalping_bot_v3/
-├── main.py               # Entry point for live trading (V3)
-├── backtest.py           # Backtesting engine
-├── dashboard.py          # Real-time monitoring dashboard (NEW)
-├── config.py             # Configuration settings (V3 enhanced)
-├── indicators.py         # Technical indicators calculation (V3)
-├── strategy.py           # Trading strategy logic (V3 enhanced)
-├── risk_management.py    # Risk management and position sizing
-├── trade_executor.py     # MT5 order execution
-├── logger.py             # Logging and trade tracking
-├── utils.py              # Helper functions
-├── test_bot_v3.py        # V3 component testing (NEW)
-├── requirements.txt      # Python dependencies (V3 enhanced)
-├── README.md            # This file
-├── modules/             # V3 enhancement modules (NEW)
-│   ├── __init__.py      # Package initialization
-│   ├── mtf_filter.py    # Multi-timeframe filter
-│   ├── cooldown_manager.py   # Trade cooldown logic
-│   ├── signal_evaluator.py   # Signal scoring system
-│   ├── volatility_filter.py  # ATR and momentum filter
-│   └── pause_manager.py      # Auto-pause and resume logic
-└── reports/             # Backtest reports and logs
-    ├── trade_log_v3.csv
-    ├── signal_log_v3.csv
-    └── backtest_report_*.html
+### Test Bot
+```bash
+python test_bot.py
 ```
 
-## V3 Performance Metrics
+## 📊 Strategy Overview
 
-The bot tracks and reports the following enhanced metrics:
+### Signal Generation
+1. **Multi-timeframe Confirmation**: M1 and M5 EMA crossovers
+2. **RSI Filter**: Oversold/overbought conditions
+3. **ATR Analysis**: Volatility measurement
+4. **MACD Momentum**: Trend strength confirmation
 
-- **Total Return**: Overall profit/loss percentage
-- **Win Rate**: Percentage of profitable trades
-- **Profit Factor**: Ratio of gross profit to gross loss
-- **Maximum Drawdown**: Largest peak-to-trough decline
-- **Sharpe Ratio**: Risk-adjusted return measure
-- **Signal Quality Score**: Average signal quality per trade
-- **Multi-timeframe Alignment**: Percentage of trades with MTF confirmation
-- **Cooldown Efficiency**: Impact of cooldown periods on performance
-- **Volatility Filter Effectiveness**: Performance during high vs low volatility
-- **Pause Mode Impact**: Performance during auto-pause periods
+### Risk Management
+- **Daily Loss Limit**: Configurable maximum daily loss
+- **Trade Limits**: Maximum trades per day
+- **Position Sizing**: Risk-based position calculation
+- **Dynamic SL/TP**: ATR-based stop loss and take profit
 
-## Risk Warning
+### Advanced Filters
+- **Signal Quality**: Minimum score requirement
+- **Volatility Filter**: Market condition assessment
+- **Momentum Filter**: Trend strength validation
+- **Cooldown Management**: Adaptive trade timing
 
-⚠️ **IMPORTANT**: This bot is for educational and research purposes. Trading forex involves substantial risk of loss and is not suitable for all investors. Past performance does not guarantee future results.
+## 📁 Project Structure
 
-- Always test thoroughly on a demo account before live trading
-- Monitor the bot's performance regularly
-- Never risk more than you can afford to lose
-- Consider market conditions and news events that may affect performance
-- The v3 enhancements add complexity - ensure you understand all features
-
-## V3 Customization
-
-### Adjusting Signal Scoring
-
-Edit `signal_evaluator.py` to modify scoring weights:
-
-```python
-# Modify scoring factors in calculate_signal_score method
-if rsi_distance > 10:
-    score += 10  # RSI distance points
+```
+untitled/
+├── main.py                 # Main bot entry point
+├── config.py              # Configuration settings
+├── strategy.py            # Trading strategy logic
+├── indicators.py          # Technical indicators
+├── risk_management.py     # Risk management
+├── trade_executor.py      # Trade execution
+├── api_manager.py         # MT5 API management
+├── mock_mt5.py           # Mock API for testing
+├── logger.py             # Logging utilities
+├── backtest.py           # Backtesting module
+├── utils.py              # Utility functions
+├── modules/              # Enhanced v3 modules
+│   ├── mtf_filter.py     # Multi-timeframe filter
+│   ├── cooldown_manager.py # Adaptive cooldown
+│   ├── signal_evaluator.py # Signal quality scoring
+│   ├── volatility_filter.py # Volatility analysis
+│   └── pause_manager.py  # Auto-pause functionality
+├── reports/              # Generated reports
+├── requirements.txt      # Python dependencies
+└── .env                 # Environment variables
 ```
 
-### Modifying Cooldown Periods
+## 🔧 Configuration Options
 
-Edit `config.py` to adjust cooldown times:
+### Trading Parameters
+- `SYMBOL`: Trading symbol (default: XAUUSD)
+- `TIMEFRAME`: Primary timeframe (default: M1)
+- `SECONDARY_TIMEFRAME`: Secondary timeframe (default: M5)
 
-```python
-'cooldown_win_minutes': 3,   # After winning trade
-'cooldown_loss_minutes': 10, # After losing trade
+### Indicator Settings
+- `EMA_FAST`: Fast EMA period (default: 5)
+- `EMA_SLOW`: Slow EMA period (default: 21)
+- `RSI_PERIOD`: RSI period (default: 14)
+- `ATR_PERIOD`: ATR period (default: 14)
+
+### Risk Management
+- `MAX_DAILY_LOSS`: Maximum daily loss in USD
+- `MAX_DAILY_TRADES`: Maximum trades per day
+- `RISK_PERCENT`: Risk per trade percentage
+- `POSITION_SIZE`: Default position size
+
+### Advanced Settings
+- `MIN_SIGNAL_SCORE`: Minimum signal quality score
+- `COOLDOWN_WIN_MINUTES`: Cooldown after winning trade
+- `COOLDOWN_LOSS_MINUTES`: Cooldown after losing trade
+- `MAX_CONSECUTIVE_NONE`: Auto-pause threshold
+
+## 📈 Performance Tracking
+
+The bot generates comprehensive logs and reports:
+
+- **Trade Log**: Detailed trade execution records
+- **Signal Log**: Signal generation and analysis
+- **Performance Metrics**: Win rate, profit factor, drawdown
+- **Risk Metrics**: Daily P&L, position exposure
+
+## 🛡️ Safety Features
+
+- **Emergency Stop**: Immediate shutdown capability
+- **Loss Limits**: Automatic stop on daily loss limit
+- **Position Limits**: Maximum position restrictions
+- **Error Handling**: Comprehensive error recovery
+- **Logging**: Complete audit trail
+
+## 🔍 Monitoring
+
+### Log Files
+- `trading_bot_v3.log`: Main application log
+- `trade_log_v3.csv`: Trade execution records
+- `signal_log_v3.csv`: Signal analysis records
+
+### Real-time Monitoring
+- Signal generation status
+- Risk management status
+- API connection status
+- Performance metrics
+
+## 🚨 Important Notes
+
+### Risk Disclaimer
+- This bot is for educational purposes
+- Past performance doesn't guarantee future results
+- Always test thoroughly before live trading
+- Use proper risk management
+
+### Platform Limitations
+- **Windows**: Full MT5 API support
+- **macOS/Linux**: Mock API for testing only
+- For live trading on macOS/Linux, consider using a Windows VM or cloud server
+
+### Broker Requirements
+- MT5 broker account with API access
+- Sufficient margin for position sizing
+- Low latency connection recommended
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+#### Import Errors
+```bash
+# Install missing dependencies
+pip install -r requirements.txt
+
+# Install TA-Lib
+brew install ta-lib  # macOS
+pip install TA-Lib
 ```
 
-### Customizing Volatility Filter
+#### MT5 Connection Issues
+- Verify broker credentials
+- Check MT5 server status
+- Ensure API trading is enabled
+- Contact broker support
 
-Edit `volatility_filter.py` to adjust volatility thresholds:
+#### Performance Issues
+- Check system resources
+- Optimize timeframe settings
+- Review risk management parameters
+- Monitor network latency
 
-```python
-self.min_volatility_ratio = 1.0  # Current ATR must be >= ATR MA
+### Debug Mode
+Enable debug logging in `.env`:
+```env
+DEBUG=true
+LOG_LEVEL=DEBUG
 ```
 
-## Troubleshooting
-
-### Common V3 Issues
-
-1. **Low Signal Scores**:
-   - Check market volatility conditions
-   - Verify multi-timeframe alignment
-   - Review RSI and momentum indicators
-
-2. **Frequent Pauses**:
-   - Market may be in low volatility period
-   - Check consecutive NONE signal count
-   - Review trading session times
-
-3. **Cooldown Conflicts**:
-   - Check last trade result
-   - Verify cooldown timing
-   - Review risk management settings
-
-### Enhanced Logs
-
-Check the following log files for debugging:
-- `trading_bot_v3.log`: General bot activity with v3 enhancements
-- `trade_log_v3.csv`: Detailed trade records
-- `signal_log_v3.csv`: Strategy signals and quality scores
-
-## Support
+## 📞 Support
 
 For issues and questions:
-1. Check the logs for error messages
-2. Review the configuration settings
-3. Test with different parameters using `test_bot_v3.py`
-4. Run backtests to validate strategy changes
-5. Use status report to diagnose issues
+1. Check the logs in `trading_bot_v3.log`
+2. Review configuration settings
+3. Test with mock API first
+4. Contact broker for API issues
 
-## License
+## 📝 License
 
 This project is for educational purposes. Use at your own risk.
 
-## Disclaimer
+## 🔄 Version History
 
-This software is provided "as is" without warranty. The authors are not responsible for any financial losses incurred through the use of this bot. Always test thoroughly and trade responsibly.
+### v3.0 (Current)
+- Multi-timeframe confirmation
+- Signal quality scoring
+- Advanced filters
+- Auto-pause functionality
+- Enhanced risk management
 
-## Further Help
+### v2.0
+- Basic scalping strategy
+- Risk management
+- MT5 integration
 
-For detailed setup, troubleshooting, and advanced usage, please refer to the full user manual in [MANUAL.md](./MANUAL.md). 
+### v1.0
+- Initial release
+- Basic EMA crossover strategy 

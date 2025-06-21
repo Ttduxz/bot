@@ -1,77 +1,161 @@
+#!/usr/bin/env python3
+"""
+Configuration Module for XAU/USD Scalping Bot V3
+Centralized configuration management with enhanced v3 parameters
+and comprehensive settings for all bot components.
+
+TODO LIST:
+1. TODO: Implement configuration validation system
+   - Add parameter type checking
+   - Implement range validation for numeric parameters
+   - Add dependency validation between parameters
+   - Include configuration schema validation
+
+2. TODO: Add environment-based configuration
+   - Implement environment-specific config files
+   - Add development/production configuration switching
+   - Include sensitive data encryption
+   - Add configuration backup/restore functionality
+
+3. TODO: Implement dynamic configuration updates
+   - Add runtime configuration modification
+   - Implement configuration hot-reloading
+   - Add configuration change logging
+   - Include configuration version control
+
+4. TODO: Add configuration optimization tools
+   - Implement configuration performance analysis
+   - Add parameter sensitivity testing
+   - Include configuration benchmarking
+   - Add automated configuration tuning
+
+5. TODO: Implement configuration security
+   - Add configuration encryption
+   - Implement access control for sensitive settings
+   - Include configuration audit logging
+   - Add configuration integrity checks
+
+6. TODO: Add configuration documentation
+   - Implement auto-generated configuration docs
+   - Add parameter usage examples
+   - Include configuration best practices
+   - Add configuration troubleshooting guide
+
+7. TODO: Implement configuration testing framework
+   - Add configuration unit tests
+   - Implement configuration integration tests
+   - Include configuration validation tests
+   - Add configuration performance tests
+
+8. TODO: Add configuration monitoring
+   - Implement configuration usage tracking
+   - Add configuration performance metrics
+   - Include configuration error monitoring
+   - Add configuration health checks
+
+9. TODO: Implement configuration migration system
+   - Add configuration version migration
+   - Implement backward compatibility
+   - Include configuration upgrade tools
+   - Add configuration rollback functionality
+
+10. TODO: Add configuration analytics
+    - Implement configuration usage analytics
+    - Add configuration performance analysis
+    - Include configuration optimization suggestions
+    - Add configuration impact assessment
+"""
+
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
+# Trading Configuration
+SYMBOL = 'XAUUSD'
+TIMEFRAME = 'M1'
+SECONDARY_TIMEFRAME = 'M5'
+
+# Indicator Settings
+EMA_FAST = 5
+EMA_SLOW = 21
+EMA_FAST_M5 = 5
+EMA_SLOW_M5 = 20
+RSI_PERIOD = 14
+ATR_PERIOD = 14
+
+# Risk Management
+MAX_DAILY_LOSS = float(os.getenv('MAX_DAILY_LOSS', '100'))
+MAX_DAILY_TRADES = int(os.getenv('MAX_DAILY_TRADES', '10'))
+RISK_PERCENT = float(os.getenv('RISK_PERCENT', '2.0'))
+POSITION_SIZE = float(os.getenv('POSITION_SIZE', '0.1'))
+
+# ATR-based SL/TP
+ATR_SL_MULTIPLIER = 1.2
+ATR_TP_MULTIPLIER = 1.8
+
+# Cooldown Settings
+COOLDOWN_WIN_MINUTES = 3
+COOLDOWN_LOSS_MINUTES = 10
+
+# Signal Quality
+MIN_SIGNAL_SCORE = 60
+
+# Volatility Filter
+ATR_MA_PERIOD = 20
+VOLATILITY_THRESHOLD = 0.5
+
+# Momentum Filter
+MACD_FAST = 12
+MACD_SLOW = 26
+MACD_SIGNAL = 9
+
+# Auto Pause
+MAX_CONSECUTIVE_NONE = 3
+
+# MT5 Configuration
+MT5_LOGIN = os.getenv('MT5_LOGIN')
+MT5_PASSWORD = os.getenv('MT5_PASSWORD')
+MT5_SERVER = os.getenv('MT5_SERVER')
+
+# Logging
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+LOG_FILE = 'trading_bot_v3.log'
+
+# Debug Mode
+DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
+
+# Configuration dictionary
 CONFIG = {
-    # Risk Management
-    'risk_per_trade': 0.01,   # 1% risk per trade
-    'max_trades_per_day': 5,
-    'max_daily_loss': 0.03,   # 3% max daily loss
-    'take_profit_pips': 10,
-    'stop_loss_pips': 7,
-    
-    # Trading Parameters
-    'symbol': 'XAUUSD',
-    'timeframe': 'M1',  # 1-minute chart
-    'magic_number': 234000,
-    'deviation': 10,
-    
-    # Technical Indicators (Updated for v3)
-    'ema_fast': 5,
-    'ema_slow': 20,  # Changed from 21 to 20
-    'rsi_period': 14,
-    'rsi_overbought': 70,
-    'rsi_oversold': 30,
-    'atr_period': 14,
-    
-    # V3 Enhanced Parameters
-    'mtf_enabled': True,  # Multi-timeframe confirmation
-    'signal_minimum_score': 60,  # Minimum signal score to execute trade
-    'cooldown_win_minutes': 3,  # Cooldown after winning trade
-    'cooldown_loss_minutes': 10,  # Cooldown after losing trade
-    'pause_none_signals': 3,  # Pause after N consecutive NONE signals
-    'pause_duration_minutes': 30,  # Pause duration
-    
-    # ATR-based Dynamic SL/TP (Updated v3)
-    'atr_sl_multiplier': 1.2,  # Stop Loss = ATR × 1.2
-    'atr_tp_multiplier': 1.8,  # Take Profit = ATR × 1.8
-    
-    # Volatility Filter
-    'min_volatility_ratio': 1.0,  # Current ATR must be >= ATR MA
-    'atr_ma_period': 20,  # Period for ATR moving average
-    
-    # MACD Parameters
-    'macd_fast': 12,
-    'macd_slow': 26,
-    'macd_signal': 9,
-    
-    # Trading Sessions (UTC)
-    'london_open': '08:00',
-    'london_close': '16:00',
-    'newyork_open': '13:00',
-    'newyork_close': '21:00',
-    
-    # MT5 Connection
-    'mt5_login': int(os.getenv('MT5_LOGIN', '0')),
-    'mt5_password': os.getenv('MT5_PASSWORD', ''),
-    'mt5_server': os.getenv('MT5_SERVER', ''),
-    
-    # Logging
-    'log_file': 'trading_bot_v3.log',
-    'trade_log_file': 'trade_log_v3.csv',
-    'signal_log_file': 'signal_log_v3.csv',
-    
-    # Backtesting
-    'backtest_start_date': '2024-01-01',
-    'backtest_end_date': '2024-12-31',
-    'commission_per_lot': 7.0,  # USD per lot
-    'slippage_pips': 1,
-    
-    # V3 Performance Tracking
-    'enable_signal_scoring': True,
-    'enable_volatility_filter': True,
-    'enable_momentum_filter': True,
-    'enable_auto_pause': True,
-    'enable_cooldown': True,
+    'symbol': SYMBOL,
+    'timeframe': TIMEFRAME,
+    'secondary_timeframe': SECONDARY_TIMEFRAME,
+    'ema_fast': EMA_FAST,
+    'ema_slow': EMA_SLOW,
+    'ema_fast_m5': EMA_FAST_M5,
+    'ema_slow_m5': EMA_SLOW_M5,
+    'rsi_period': RSI_PERIOD,
+    'atr_period': ATR_PERIOD,
+    'max_daily_loss': MAX_DAILY_LOSS,
+    'max_daily_trades': MAX_DAILY_TRADES,
+    'risk_percent': RISK_PERCENT,
+    'position_size': POSITION_SIZE,
+    'atr_sl_multiplier': ATR_SL_MULTIPLIER,
+    'atr_tp_multiplier': ATR_TP_MULTIPLIER,
+    'cooldown_win_minutes': COOLDOWN_WIN_MINUTES,
+    'cooldown_loss_minutes': COOLDOWN_LOSS_MINUTES,
+    'min_signal_score': MIN_SIGNAL_SCORE,
+    'atr_ma_period': ATR_MA_PERIOD,
+    'volatility_threshold': VOLATILITY_THRESHOLD,
+    'macd_fast': MACD_FAST,
+    'macd_slow': MACD_SLOW,
+    'macd_signal': MACD_SIGNAL,
+    'max_consecutive_none': MAX_CONSECUTIVE_NONE,
+    'mt5_login': MT5_LOGIN,
+    'mt5_password': MT5_PASSWORD,
+    'mt5_server': MT5_SERVER,
+    'log_level': LOG_LEVEL,
+    'log_file': LOG_FILE,
+    'debug': DEBUG
 } 

@@ -1,9 +1,69 @@
-# MetaTrader 5 Credentials
+# XAU/USD Scalping Bot V3 - Environment Configuration
+# Copy this file to .env and fill in your credentials
+
+# =============================================================================
+# API TYPE SELECTION
+# =============================================================================
+# Choose your preferred API (auto, mt5, mt5_web, oanda, fxcm, mock)
+# 'auto' will automatically select the best available API for your platform
+API_TYPE=auto
+
+# =============================================================================
+# META TRADER 5 (Windows only)
+# =============================================================================
 # Replace with your actual MT5 account details
 MT5_LOGIN=12345678
-MT5_PASSWORD=your_password_here
-MT5_SERVER=your_broker_server
+MT5_PASSWORD=your_password
+MT5_SERVER=YourBroker-Demo
 
-# Optional: Telegram notifications (if using)
+# =============================================================================
+# META TRADER 5 WEB API (Cross-platform)
+# =============================================================================
+# MT5 Web API server URL (if your broker provides it)
+MT5_WEB_URL=https://api.your_broker.com/mt5
+MT5_WEB_API_KEY=your_web_api_key_here
+
+# =============================================================================
+# OANDA API (Cross-platform - Recommended for macOS/Linux)
+# =============================================================================
+# Get these from your OANDA account dashboard
+OANDA_API_KEY=your_oanda_api_key_here
+OANDA_ACCOUNT_ID=your_oanda_account_id_here
+OANDA_ENVIRONMENT=practice  # 'practice' or 'live'
+
+# =============================================================================
+# FXCM API (Cross-platform)
+# =============================================================================
+# Get these from your FXCM account dashboard
+FXCM_API_KEY=your_fxcm_api_key_here
+FXCM_ACCOUNT_ID=your_fxcm_account_id_here
+FXCM_ENVIRONMENT=demo  # 'demo' or 'live'
+
+# =============================================================================
+# ALPHA VANTAGE API (Market data only)
+# =============================================================================
+# Get free API key from https://www.alphavantage.co/support/#api-key
+ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key_here
+
+# =============================================================================
+# OPTIONAL: TELEGRAM NOTIFICATIONS
+# =============================================================================
+# Create a bot with @BotFather and get these details
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_chat_id 
+TELEGRAM_CHAT_ID=your_chat_id
+
+# =============================================================================
+# PLATFORM DETECTION (Optional)
+# =============================================================================
+# Force platform detection (auto, windows, macos, linux)
+PLATFORM=auto
+
+# Risk Management
+MAX_DAILY_LOSS=100
+MAX_DAILY_TRADES=10
+RISK_PERCENT=2.0
+POSITION_SIZE=0.1
+
+# Logging
+LOG_LEVEL=INFO
+DEBUG=false 
